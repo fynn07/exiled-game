@@ -31,7 +31,7 @@ public class Play implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Set the initial zoom level
+        // Sets the initial stage for the level
         camera.position.set(3680, -60, 0);
         camera.zoom = 1.00f;
     }
@@ -42,10 +42,9 @@ public class Play implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Handle zooming based on user input
+        // Handles camera movement based on user input
+        //TODO: Change handle movement to be used with players instead of camera
         handleMovement();
-
-
 
         // Update the camera
         camera.update();
@@ -56,6 +55,7 @@ public class Play implements Screen {
     }
 
     // Method to handle zooming based on user input
+    //TODO: Change to handle players
     private void handleMovement() {
         // Zoom in with the plus key
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -90,12 +90,12 @@ public class Play implements Screen {
 
     @Override
     public void pause() {
-        // No special logic needed for pause in this example
+        //TODO
     }
 
     @Override
     public void resume() {
-        // No special logic needed for resume in this example
+        //TODO
     }
 
     @Override
