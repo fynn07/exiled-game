@@ -10,8 +10,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 
 public class Play implements Screen {
-    private TiledMap map;
-    private IsometricTiledMapRenderer renderer;
+    private final IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
     // Initial zoom level
@@ -19,13 +18,12 @@ public class Play implements Screen {
     // Zoom step for each key press
     private static final float ZOOM_STEP = 0.1f;
 
+    public Play(){
+        renderer = new Map().makeMap();
+    }
+
     @Override
     public void show() {
-        // Load the tiled map
-        map = new TmxMapLoader().load("map/exiled.tmx");
-
-        // Create the isometric tiled map renderer
-        renderer = new IsometricTiledMapRenderer(map);
 
         // Initialize the orthographic camera
         camera = new OrthographicCamera();
@@ -106,7 +104,6 @@ public class Play implements Screen {
     @Override
     public void dispose() {
         // Dispose of the map and renderer
-        map.dispose();
         renderer.dispose();
     }
 }
