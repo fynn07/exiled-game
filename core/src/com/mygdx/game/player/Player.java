@@ -17,16 +17,20 @@ public class Player extends Sprite {
     private int prev_movement;
     private float X_COORD;
     private float Y_COORD;
+    private float x;
+    private float y;
 
     public Player(Sprite sprite){
         super(sprite);
         animator = new Animator();
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        speed = 150 * 2;
+        speed = 180 * 2;
         prev_movement = 0;
-        X_COORD = 50;
-        Y_COORD = 50;
+        X_COORD = 500;
+        Y_COORD = 300;
+        x = this.getX();
+        y = this.getY();
     }
 
     public Texture runNorth(){
@@ -64,42 +68,54 @@ public class Player extends Sprite {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 currentFrame = animator.animate(runNorthWest()).getKeyFrame(stateTime, true);
+                float x = getX();
+                float y = getY();
+                this.setX(x -= Gdx.graphics.getDeltaTime() * speed / 1.5);
+                this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 5;
-                Y_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
-                X_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 currentFrame = animator.animate(runNorthEast()).getKeyFrame(stateTime, true);
+                float x = getX();
+                float y = getY();
+                this.setX(x += Gdx.graphics.getDeltaTime() * speed / 1.5);
+                this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 3;
-                Y_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
-                X_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else {
                 currentFrame = animator.animate(runNorth()).getKeyFrame(stateTime, true);
-                Y_COORD += Gdx.graphics.getDeltaTime() * speed;
+                float y = getY();
+                this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.2);
                 prev_movement = 4;
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 currentFrame = animator.animate(runSouthWest()).getKeyFrame(stateTime, true);
+                float x = getX();
+                float y = getY();
+                this.setX(x -= Gdx.graphics.getDeltaTime() * speed / 1.5);
+                this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 7;
-                Y_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
-                X_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 currentFrame = animator.animate(runSouthEast()).getKeyFrame(stateTime, true);
+                float x = getX();
+                float y = getY();
+                this.setX(x += Gdx.graphics.getDeltaTime() * speed / 1.5);
+                this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 1;
-                Y_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
-                X_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else {
                 currentFrame = animator.animate(runSouth()).getKeyFrame(stateTime, true);
-                Y_COORD -= Gdx.graphics.getDeltaTime() * speed;
+                float y = getY();
+                this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.2);
                 prev_movement = 0;
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             currentFrame = animator.animate(runWest()).getKeyFrame(stateTime, true);
-                X_COORD -= Gdx.graphics.getDeltaTime() * speed;
+            float x = getX();
+            this.setX(x -= Gdx.graphics.getDeltaTime() * speed);
             prev_movement = 6;
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             currentFrame = animator.animate(runEast()).getKeyFrame(stateTime, true);
-            X_COORD += Gdx.graphics.getDeltaTime() * speed;
+            float x = getX();
+            this.setX(x += Gdx.graphics.getDeltaTime() * speed);
             prev_movement = 2;
         }
 

@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.mygdx.game.player.Player;
 
 public class Play implements Screen {
+    private final Map map;
     private final IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Player player;
@@ -20,7 +23,8 @@ public class Play implements Screen {
     private static final float ZOOM_STEP = 0.1f;
 
     public Play(){
-        renderer = new Map().makeMap();
+        map =  new Map();
+        renderer = map.makeMap();
         player = new Player(new Sprite(new Texture("assets/Characters/Male/Male_0_Idle0.png")));
     }
 
@@ -33,6 +37,7 @@ public class Play implements Screen {
 
         // Sets the initial stage for the level
         camera.position.set(3680, -60, 0);
+        player.setPosition(3680, -300);
         camera.zoom = 1.00f;
     }
 
@@ -43,15 +48,17 @@ public class Play implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Handles camera movement based on user input
+        camera.position.set(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 0);
 
-        player.handleMovement();
 
         // Update the camera
         camera.update();
 
         // Set the camera view for the renderer and render the map
         renderer.setView(camera);
-        renderer.render();
+        renderer.render(new int[]{0});
+        player.handleMovement();
+        renderer.render(new int[]{1, 2});
     }
 
     @Override
