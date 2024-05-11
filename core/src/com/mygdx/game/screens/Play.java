@@ -5,13 +5,21 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.mygdx.game.animation.Animator;
+import com.mygdx.game.player.Player;
 
 public class Play implements Screen {
     private final IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
+    private SpriteBatch spriteBatch;
+    private Animator animator;
+    private Player player;
+    private float stateTime;
 
     // Initial zoom level
     private static final float INITIAL_ZOOM = 2.0f;
@@ -20,6 +28,10 @@ public class Play implements Screen {
 
     public Play(){
         renderer = new Map().makeMap();
+        player = new Player();
+        spriteBatch = new SpriteBatch();
+        animator = new Animator();
+        stateTime = 0f;
     }
 
     @Override
@@ -40,9 +52,11 @@ public class Play implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+
         // Handles camera movement based on user input
-        //TODO: Change handle movement to be used with players instead of camera
         handleMovement();
+
 
         // Update the camera
         camera.update();
@@ -50,32 +64,6 @@ public class Play implements Screen {
         // Set the camera view for the renderer and render the map
         renderer.setView(camera);
         renderer.render();
-    }
-
-    // Method to handle zooming based on user input
-    //TODO: Change to handle players
-    private void handleMovement() {
-        // Zoom in with the plus key
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.position.x -= 10;
-        }
-        // Zoom out with the minus key
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.position.x += 10;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.position.y += 10;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.position.y -= 10;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            camera.zoom += ZOOM_STEP;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
-            camera.zoom -= ZOOM_STEP;
-        }
-
     }
 
     @Override
@@ -106,4 +94,49 @@ public class Play implements Screen {
         // Dispose of the map and renderer
         renderer.dispose();
     }
+
+    // Method to handle zooming based on user input
+    //TODO: Change to handle players
+    private void handleMovement() {
+        stateTime += Gdx.graphics.getDeltaTime() * 0.5f;
+        TextureRegion currentFrame = null;
+
+        boolean isMovingDiagonal = false;
+
+        // Check for diagonal movement
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                currentFrame = animator.animate(player.runNorthWest()).getKeyFrame(stateTime, true);
+                isMovingDiagonal = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                currentFrame = animator.animate(player.runNorthEast()).getKeyFrame(stateTime, true);
+                isMovingDiagonal = true;
+            } else {
+                currentFrame = animator.animate(player.runNorth()).getKeyFrame(stateTime, true);
+            }
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                currentFrame = animator.animate(player.runSouthWest()).getKeyFrame(stateTime, true);
+                isMovingDiagonal = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                currentFrame = animator.animate(player.runSouthEast()).getKeyFrame(stateTime, true);
+                isMovingDiagonal = true;
+            } else {
+                currentFrame = animator.animate(player.runSouth()).getKeyFrame(stateTime, true);
+            }
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            currentFrame = animator.animate(player.runWest()).getKeyFrame(stateTime, true);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            currentFrame = animator.animate(player.runEast()).getKeyFrame(stateTime, true);
+        }
+
+        spriteBatch.begin();
+        if (currentFrame != null) {
+            spriteBatch.draw(currentFrame, 50, 50);
+        }
+        spriteBatch.end();
+    }
+
+
+
 }
