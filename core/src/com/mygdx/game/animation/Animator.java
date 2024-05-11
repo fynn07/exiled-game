@@ -24,5 +24,7 @@ public class Animator{
        }
        return new Animation<TextureRegion>(0.025f, runFrames);
     }
+
+
 }
 

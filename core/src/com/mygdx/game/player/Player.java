@@ -3,25 +3,32 @@ package com.mygdx.game.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.animation.Animator;
 import com.mygdx.game.screens.Play;
 
-public class Player{
-    private Animator animator;
+public class Player extends Sprite {
     private SpriteBatch spriteBatch;
+    private Animator animator;
     private float stateTime;
+    private float speed;
+    private int prev_movement;
+    private float X_COORD;
+    private float Y_COORD;
 
-    public Player(){
+    public Player(Sprite sprite){
+        super(sprite);
         animator = new Animator();
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
+        speed = 150 * 2;
+        prev_movement = 0;
+        X_COORD = 50;
+        Y_COORD = 50;
     }
 
-    public Texture createPlayer(){
-        return new Texture(Gdx.files.internal("assets/Characters/Male/Male_0_Idle0.png"));
-    }
     public Texture runNorth(){
         return new Texture(Gdx.files.internal("assets/Characters/Animations/run_N.png"));
     }
@@ -52,40 +59,82 @@ public class Player{
         stateTime += Gdx.graphics.getDeltaTime() * 0.5f;
         TextureRegion currentFrame = null;
 
-        boolean isMovingDiagonal = false;
 
         // Check for diagonal movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 currentFrame = animator.animate(runNorthWest()).getKeyFrame(stateTime, true);
-                isMovingDiagonal = true;
+                prev_movement = 5;
+                Y_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
+                X_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 currentFrame = animator.animate(runNorthEast()).getKeyFrame(stateTime, true);
-                isMovingDiagonal = true;
+                prev_movement = 3;
+                Y_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
+                X_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else {
                 currentFrame = animator.animate(runNorth()).getKeyFrame(stateTime, true);
+                Y_COORD += Gdx.graphics.getDeltaTime() * speed;
+                prev_movement = 4;
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 currentFrame = animator.animate(runSouthWest()).getKeyFrame(stateTime, true);
-                isMovingDiagonal = true;
+                prev_movement = 7;
+                Y_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
+                X_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 currentFrame = animator.animate(runSouthEast()).getKeyFrame(stateTime, true);
-                isMovingDiagonal = true;
+                prev_movement = 1;
+                Y_COORD -= Gdx.graphics.getDeltaTime() * speed / 1.5;
+                X_COORD += Gdx.graphics.getDeltaTime() * speed / 1.5;
             } else {
                 currentFrame = animator.animate(runSouth()).getKeyFrame(stateTime, true);
+                Y_COORD -= Gdx.graphics.getDeltaTime() * speed;
+                prev_movement = 0;
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             currentFrame = animator.animate(runWest()).getKeyFrame(stateTime, true);
+                X_COORD -= Gdx.graphics.getDeltaTime() * speed;
+            prev_movement = 6;
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             currentFrame = animator.animate(runEast()).getKeyFrame(stateTime, true);
+            X_COORD += Gdx.graphics.getDeltaTime() * speed;
+            prev_movement = 2;
         }
 
         spriteBatch.begin();
         if (currentFrame != null) {
-            spriteBatch.draw(currentFrame, 50, 50);
+            spriteBatch.draw(currentFrame, X_COORD, Y_COORD);
+        }
+        else{
+            if(prev_movement == 0){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_3_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 1){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_2_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 2){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_1_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 3){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_0_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 4){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_7_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 5){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_6_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 6){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_5_Idle0.png"), X_COORD, Y_COORD);
+            }
+            if(prev_movement == 7){
+                spriteBatch.draw(new Texture("assets/Characters/Male/Male_4_Idle0.png"), X_COORD, Y_COORD);
+            }
         }
         spriteBatch.end();
+
     }
 
 }

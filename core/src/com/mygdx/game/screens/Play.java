@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.mygdx.game.player.Player;
 
@@ -19,7 +21,7 @@ public class Play implements Screen {
 
     public Play(){
         renderer = new Map().makeMap();
-        player = new Player();
+        player = new Player(new Sprite(new Texture("assets/Characters/Male/Male_0_Idle0.png")));
     }
 
     @Override
@@ -41,6 +43,7 @@ public class Play implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Handles camera movement based on user input
+
         player.handleMovement();
 
         // Update the camera
