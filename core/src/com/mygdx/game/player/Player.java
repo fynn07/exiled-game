@@ -17,8 +17,6 @@ public class Player extends Sprite {
     private int prev_movement;
     private float X_COORD;
     private float Y_COORD;
-    private float x;
-    private float y;
 
     public Player(Sprite sprite){
         super(sprite);
@@ -29,8 +27,6 @@ public class Player extends Sprite {
         prev_movement = 0;
         X_COORD = 500;
         Y_COORD = 300;
-        x = this.getX();
-        y = this.getY();
     }
 
     public Texture runNorth(){
