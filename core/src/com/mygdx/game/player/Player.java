@@ -22,6 +22,7 @@ import java.awt.*;
 
 public class Player extends Sprite {
     public Map map;
+    public ShapeRenderer shapeRenderer;
     public SpriteBatch spriteBatch;
     public MapObjects objects;
     public Rectangle bounds;
@@ -57,11 +58,10 @@ public class Player extends Sprite {
 
     //debugging
 
-
-
     public Player(Sprite sprite){
         super(sprite);
         map = new Map();
+        shapeRenderer = new ShapeRenderer();
         objects = map.getCollissionObjects();
         animator = new Animator();
         spriteBatch = new SpriteBatch();
@@ -72,8 +72,7 @@ public class Player extends Sprite {
         prev_movement = 3;
         X_COORD = 500;
         Y_COORD = 300;
-        bounds = new Rectangle(3680, -300, getWidth(), getHeight());
-        System.out.println(bounds);
+        bounds = new Rectangle(getX(), getY(), getWidth(), getHeight());
 
         //Initializing Idle Textures
         Idle_0 = new Texture("assets/Characters/Male/Male_3_Idle0.png");
@@ -105,13 +104,18 @@ public class Player extends Sprite {
 
         for(RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)){
             Rectangle rectangle = rectangleObject.getRectangle();
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            shapeRenderer.end();
 
             if(Intersector.overlaps(rectangle, bounds)){
                 System.out.println("FINALLY");
             }
+
+
         }
 
-        // Check for diagonal movement
+        // Check For Movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 currentFrame = animator.animate(runNorthWest).getKeyFrame(stateTime, true);

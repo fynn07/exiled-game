@@ -22,6 +22,7 @@ public class Map {
 
     public MapObjects getCollissionObjects(){
         MapLayer collisionObjectLayer = map.getLayers().get(4);
+        System.out.println(collisionObjectLayer.getObjects().getCount());
         return collisionObjectLayer.getObjects();
     }
 
