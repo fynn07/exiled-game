@@ -50,15 +50,17 @@ public class Play implements Screen {
         // Handles camera movement based on user input
         camera.position.set(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 0);
 
-
         // Update the camera
         camera.update();
-
         // Set the camera view for the renderer and render the map
+        renderData();
+    }
+
+    public void renderData(){
         renderer.setView(camera);
-        renderer.render(new int[]{0});
+        renderer.render(new int[]{0, 2});
         player.handleMovement();
-        renderer.render(new int[]{1, 2});
+        renderer.render(new int[]{3});
     }
 
     @Override
@@ -67,6 +69,7 @@ public class Play implements Screen {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
         camera.update();
+
     }
 
     @Override
