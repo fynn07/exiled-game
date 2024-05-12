@@ -17,11 +17,6 @@ public class Play implements Screen {
     private OrthographicCamera camera;
     private Player player;
 
-    // Initial zoom level
-    private static final float INITIAL_ZOOM = 2.0f;
-    // Zoom step for each key press
-    private static final float ZOOM_STEP = 0.1f;
-
     public Play(){
         map =  new Map();
         renderer = map.makeMap();
@@ -49,7 +44,6 @@ public class Play implements Screen {
 
         // Handles camera movement based on user input
         camera.position.set(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 0);
-
         // Update the camera
         camera.update();
         // Set the camera view for the renderer and render the map
@@ -69,7 +63,6 @@ public class Play implements Screen {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
         camera.update();
-
     }
 
     @Override

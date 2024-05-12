@@ -6,17 +6,33 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.animation.Animator;
-import com.mygdx.game.screens.Play;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Intersector;
+import com.mygdx.game.screens.Map;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.mygdx.game.utilities.Animator;
+
+
+import java.awt.*;
 
 public class Player extends Sprite {
+    public Map map;
     public SpriteBatch spriteBatch;
+    public MapObjects objects;
+    public Rectangle bounds;
     private Animator animator;
     private float stateTime;
     private float speed;
-    private int prev_movement;
     private float X_COORD;
     private float Y_COORD;
+    private float prev_x;
+    private float prev_y;
+    private int prev_movement;
 
     //Idle Textures
     private Texture Idle_0;
@@ -39,17 +55,25 @@ public class Player extends Sprite {
     private Texture runWest;
     private Texture runEast;
 
+    //debugging
+
 
 
     public Player(Sprite sprite){
         super(sprite);
+        map = new Map();
+        objects = map.getCollissionObjects();
         animator = new Animator();
         spriteBatch = new SpriteBatch();
+        prev_x = 0;
+        prev_y = 0;
         stateTime = 0f;
         speed = 180 * 2;
         prev_movement = 3;
         X_COORD = 500;
         Y_COORD = 300;
+        bounds = new Rectangle(3680, -300, getWidth(), getHeight());
+        System.out.println(bounds);
 
         //Initializing Idle Textures
         Idle_0 = new Texture("assets/Characters/Male/Male_3_Idle0.png");
@@ -75,11 +99,17 @@ public class Player extends Sprite {
 
     //TODO Preload the textures to optimize performance
 
-    //TODO: Change to handle players
     public void handleMovement() {
         stateTime += Gdx.graphics.getDeltaTime() * 0.5f;
         TextureRegion currentFrame = null;
 
+        for(RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)){
+            Rectangle rectangle = rectangleObject.getRectangle();
+
+            if(Intersector.overlaps(rectangle, bounds)){
+                System.out.println("FINALLY");
+            }
+        }
 
         // Check for diagonal movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -87,6 +117,8 @@ public class Player extends Sprite {
                 currentFrame = animator.animate(runNorthWest).getKeyFrame(stateTime, true);
                 float x = getX();
                 float y = getY();
+                prev_x = x;
+                prev_y = y;
                 this.setX(x -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 5;
@@ -94,12 +126,15 @@ public class Player extends Sprite {
                 currentFrame = animator.animate(runNorthEast).getKeyFrame(stateTime, true);
                 float x = getX();
                 float y = getY();
+                prev_x = x;
+                prev_y = y;
                 this.setX(x += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 3;
             } else {
                 currentFrame = animator.animate(runNorth).getKeyFrame(stateTime, true);
                 float y = getY();
+                prev_y = y;
                 this.setY(y += Gdx.graphics.getDeltaTime() * speed / 1.2);
                 prev_movement = 4;
             }
@@ -108,6 +143,8 @@ public class Player extends Sprite {
                 currentFrame = animator.animate(runSouthWest).getKeyFrame(stateTime, true);
                 float x = getX();
                 float y = getY();
+                prev_x = x;
+                prev_y = y;
                 this.setX(x -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 7;
@@ -115,23 +152,28 @@ public class Player extends Sprite {
                 currentFrame = animator.animate(runSouthEast).getKeyFrame(stateTime, true);
                 float x = getX();
                 float y = getY();
+                prev_x = x;
+                prev_y = y;
                 this.setX(x += Gdx.graphics.getDeltaTime() * speed / 1.5);
                 this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.5);
                 prev_movement = 1;
             } else {
                 currentFrame = animator.animate(runSouth).getKeyFrame(stateTime, true);
                 float y = getY();
+                prev_y = y;
                 this.setY(y -= Gdx.graphics.getDeltaTime() * speed / 1.2);
                 prev_movement = 0;
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             currentFrame = animator.animate(runWest).getKeyFrame(stateTime, true);
             float x = getX();
+            prev_x = x;
             this.setX(x -= Gdx.graphics.getDeltaTime() * speed);
             prev_movement = 6;
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             currentFrame = animator.animate(runEast).getKeyFrame(stateTime, true);
             float x = getX();
+            prev_x = x;
             this.setX(x += Gdx.graphics.getDeltaTime() * speed);
             prev_movement = 2;
         }
@@ -166,8 +208,10 @@ public class Player extends Sprite {
                 spriteBatch.draw(Idle_7, X_COORD, Y_COORD);
             }
         }
+        bounds = new Rectangle(getX(), getY(), getWidth(), getHeight());
         spriteBatch.end();
 
     }
+
 
 }
