@@ -106,6 +106,7 @@ public class Player extends Sprite {
         for(RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)){
             Rectangle rectangle = rectangleObject.getRectangle();
 
+
             if(Intersector.overlaps(rectangle, bounds)){
                 System.out.println("FINALLY");
             }
